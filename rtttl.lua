@@ -31,11 +31,11 @@ local function parseDefaults(s)
    for _, rawDefault in ipairs(s:split(",")) do
       local k,v = rawDefault:match("(%a+)=(%d+)")
       if k == 'b' then
-         d.beat = v
+         d.beat = tonumber(v)
       elseif k == 'o' then
-         d.octave = v
+         d.octave = tonumber(v)
       elseif k == 'd' then
-         d.duration = v
+         d.duration = tonumber(v)
       else
          -- this should not occur in a well-formed RTTTL string.
       end
@@ -44,22 +44,22 @@ local function parseDefaults(s)
    return d
 end
 
-local function parseNote(note)
+local function parseNote(note, defaults)
    local n = {}
    local b, p, o, d = note:match("(%d*)(%a#?)(%d?)(%.?)")
    
-   n.duration = tonumber(b)
+   n.duration = tonumber(b) or defaults.duration
    n.pitch = p
-   n.octave = tonumber(o)
+   n.octave = tonumber(o) or defaults.octave
    n.dotted = (d == '.')
    
    return n
 end
 
-local function parseNotes(s)
+local function parseNotes(s, d)
    local n = {}
    for _, rawNote in ipairs(s:split(",")) do
-      table.insert(n, parseNote(rawNote))
+      table.insert(n, parseNote(rawNote, d))
    end
 
    return n
@@ -75,7 +75,7 @@ function parseRTTTL(m)
    local r = {}
    r.title = sections[1]
    r.defaults = parseDefaults(sections[2])
-   r.notes = parseNotes(sections[3])
+   r.notes = parseNotes(sections[3], r.defaults)
    
    return r
 end
@@ -111,9 +111,13 @@ end
 function playNote(n, d)
    if n.pitch == "p" then return end -- TODO: deal with rests
    
-   local d = n.duration or d.duration
-   d = 2
-   local command = "play -qn synth " .. d .. " pluck " .. string.upper(n.pitch) .. " fade l 0 " .. d .. " 2 reverb; sleep 0.1"
+   local spb = 60/d.beat
+   local beats = d.duration / n.duration
+   local seconds = beats * spb
+   if n.dotted then
+      seconds = seconds + 1/2*seconds
+   end
+   local command = "play -qn synth " .. seconds .. " pluck " .. string.upper(n.pitch) .. n.octave .. "; sleep 0.1"
    print(command)
    os.execute(command)
 end
