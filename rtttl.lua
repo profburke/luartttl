@@ -15,6 +15,8 @@
    Octave 4 - A = 440Hz; 5 => 880, 6 => 1760, 7 => 3520
 --]]
 
+package = {}
+
 function string.split(m, sep)
    sep = sep or " "
    local t = {}
@@ -65,7 +67,7 @@ local function parseNotes(s, d)
    return n
 end
 
-function parseRTTTL(m)
+local function parse(m)
    local sections = m:split(":")
    if #sections ~= 3 then
       io.stderr:write("RTTTL descriptor must contain three sections.\n")
@@ -81,7 +83,7 @@ function parseRTTTL(m)
 end
 
 -- TODO: make use of mt.__tostring ...
-function printNote(n)
+local function printNote(n)
    local s = ""
    if n.duration ~= nil then
       s = s .. n.duration
@@ -100,7 +102,7 @@ function printNote(n)
    print(s)
 end
 
-function printRingtone(rt)
+local function printRingtone(rt)
    print("Title: " .. rt.title)
    print("Defaults: beat = " .. rt.defaults.beat .. " duration = " .. rt.defaults.duration .. " octave = " .. rt.defaults.octave)
    for _, n in ipairs(rt.notes) do
@@ -108,7 +110,7 @@ function printRingtone(rt)
    end
 end
 
-function playNote(n, d)
+local function playNote(n, d)
    if n.pitch == "p" then return end -- TODO: deal with rests
    
    local spb = 60/d.beat
@@ -117,13 +119,20 @@ function playNote(n, d)
    if n.dotted then
       seconds = seconds + 1/2*seconds
    end
-   local command = "play -qn synth " .. seconds .. " pluck " .. string.upper(n.pitch) .. n.octave .. "; sleep 0.1"
-   print(command)
+   local command = "play -qn synth " .. seconds .. " pluck " .. string.upper(n.pitch) .. n.octave
+   if debugFlag then print(command) end
    os.execute(command)
 end
 
-function play(rt)
+local function play(rt)
    for _, note in ipairs(rt.notes) do
       playNote(note, rt.defaults)
    end
 end
+
+package.parse = parse
+package.play = play
+package.print = printRingtone
+package.playNote = playNote
+
+return package
