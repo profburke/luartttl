@@ -6,4 +6,10 @@ m = "JingleBell:d=8,o=5,b=112:32p,a,a,4a,a,a,4a,a,c6,f.,16g,2a,a#,a#,a#.,16a#,a#
 rt = rtttl.parse(m)
 rtttl.print(rt)
 
-rtttl.play(rt)
+function player(pitch, octave, duration)
+   local command = "play -qn synth " .. duration .. " pluck " .. string.upper(pitch) .. octave
+   if debugFlag then print(command) end
+   os.execute(command)
+end
+
+rtttl.play(rt, player)

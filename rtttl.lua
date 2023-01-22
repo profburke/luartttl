@@ -1,21 +1,23 @@
 --[[
-   Ring Tone Text Transfer Language (RTTTL)
-   Rough Spec
-   See https://some.other/doc for a BNF description
+   Parser and Player for RTTTL.
+   Copyright 2023 by Bluedino Software
 
-   Three sections, separated by ":".
+   This code is licenses under <TODO: Pick a license.>
+
+   Ring Tone Text Transfer Language (RTTTL)
+   (For a more complete description, see http://merwin.bespin.org/t4a/specs/nokia_rtttl.txt)
+
+   Three sections, name, default, notes; separated by ":".
    
    Name <= 10 chars
-   d can be 1, 2, 4, 8, 16, 32; default 4
-   o can be 4, 5, 6, 7; default 6
-   b can be 25, 28, 31, 35, 40, 45, 50, 56, 63, 70, 80, 90,
-            100, 112, 125, 140, 160, 180, 200, 225, 250, 285,
-            320, 355, 400, 450, 500, 565, 635, 715, 800, 900; default 63
+   duration (d) can be 1, 2, 4, 8, 16, 32; default 4
+   octave (o) can be 4, 5, 6, 7; default 6
+   beat (b) can be 25, 28, 31, 35, 40, 45, 50, 56, 63, 70, 80, 90,
+                   100, 112, 125, 140, 160, 180, 200, 225, 250, 285,
+                   320, 355, 400, 450, 500, 565, 635, 715, 800, 900; default 63
    
-   Octave 4 - A = 440Hz; 5 => 880, 6 => 1760, 7 => 3520
+   Frequency of A for octave 4 => 440Hz, 5 => 880Hz, 6 => 1760Hz, 7 => 3520Hz
 --]]
-
-package = {}
 
 function string.split(m, sep)
    sep = sep or " "
@@ -26,7 +28,6 @@ function string.split(m, sep)
    
    return t
 end
-
 
 local function parseDefaults(s)
    local d = { beat = 63, duration = 4, octave = 6, }
@@ -82,23 +83,9 @@ local function parse(m)
    return r
 end
 
--- TODO: make use of mt.__tostring ...
 local function printNote(n)
-   local s = ""
-   if n.duration ~= nil then
-      s = s .. n.duration
-   end
-
-   s = s .. n.pitch
-
-   if n.octave ~= nil then
-      s = s .. n.octave
-   end
-
-   if n.dotted then
-      s = s .. "."
-   end
-   
+   local s = (n.duration or '') .. n.pitch .. (n.octave or '')
+   if n.dotted then s = s .. '.' end
    print(s)
 end
 
@@ -119,9 +106,7 @@ local function playNote(n, d, player)
    if n.dotted then
       seconds = seconds + 1/2*seconds
    end
-   -- local command = "play -qn synth " .. seconds .. " pluck " .. string.upper(n.pitch) .. n.octave
-   -- if debugFlag then print(command) end
-   -- os.execute(command)
+
    if player and type(player) == "function" then
       player(n.pitch, n.octave, seconds)
    end
