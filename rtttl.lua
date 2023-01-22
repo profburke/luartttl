@@ -110,7 +110,7 @@ local function printRingtone(rt)
    end
 end
 
-local function playNote(n, d)
+local function playNote(n, d, player)
    if n.pitch == "p" then return end -- TODO: deal with rests
    
    local spb = 60/d.beat
@@ -119,20 +119,25 @@ local function playNote(n, d)
    if n.dotted then
       seconds = seconds + 1/2*seconds
    end
-   local command = "play -qn synth " .. seconds .. " pluck " .. string.upper(n.pitch) .. n.octave
-   if debugFlag then print(command) end
-   os.execute(command)
-end
-
-local function play(rt)
-   for _, note in ipairs(rt.notes) do
-      playNote(note, rt.defaults)
+   -- local command = "play -qn synth " .. seconds .. " pluck " .. string.upper(n.pitch) .. n.octave
+   -- if debugFlag then print(command) end
+   -- os.execute(command)
+   if player and type(player) == "function" then
+      player(n.pitch, n.octave, seconds)
    end
 end
 
-package.parse = parse
-package.play = play
-package.print = printRingtone
-package.playNote = playNote
+local function play(rt, player)
+   for _, note in ipairs(rt.notes) do
+      playNote(note, rt.defaults, player)
+   end
+end
+
+package = {
+   parse = parse,
+   print = printRingtone,
+   play = play,
+   playNote = playNote,
+}
 
 return package
