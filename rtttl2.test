@@ -1,0 +1,35 @@
+#!/usr/bin/env lua
+
+local rtttl = require 'rtttl'
+local blink = require 'blink'
+
+m = "JingleBell:d=8,o=5,b=112:32p,a,a,4a,a,a,4a,a,c6,f.,16g,2a,a#,a#,a#.,16a#,a#,a,a.,16a,a,g,g,a,4g,4c6"
+rt = rtttl.parse(m)
+rtttl.print(rt)
+
+local b = blink.open()
+
+local colors = {
+   a = {255, 0, 255},
+   ["a#"] = {200, 0, 200},
+   b = {255, 182, 193},
+   ["b#"] = {200, 132, 143},
+   c = {255, 0, 0},
+   ["c#"] = {200, 0, 0},
+   d = {255, 165, 0},
+   ["d#"] = {200, 115, 0},
+   e = {255, 255, 0},
+   f = {0, 255, 0},
+   ["f#"] = {0, 200, 0},
+   g = {0, 0, 255},
+   ["g#"] = {0, 0, 200},
+}
+
+function player(pitch, octave, duration)
+   local color = colors[pitch]
+   b:set(color[1], color[2], color[3])
+   blink.sleep(math.floor(500*duration))
+   b:off()
+end
+
+rtttl.play(rt, player)
