@@ -17,6 +17,8 @@
                    320, 355, 400, 450, 500, 565, 635, 715, 800, 900; default 63
    
    Frequency of A for octave 4 => 440Hz, 5 => 880Hz, 6 => 1760Hz, 7 => 3520Hz
+
+   Various RTTTL files available at https://picaxe.com/rtttl-ringtones-for-tune-command/
 --]]
 
 function string.split(m, sep)
