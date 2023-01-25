@@ -73,8 +73,7 @@ end
 local function parse(m)
    local sections = m:split(":")
    if #sections ~= 3 then
-      io.stderr:write("RTTTL descriptor must contain three sections.\n")
-      os.exit(1)
+      return nil, "RTTTL descriptor must contain three sections."
    end
 
    local r = {}
@@ -114,7 +113,16 @@ local function playNote(n, d, player)
    end
 end
 
+-- depends on play command from SoX being installed in a location on the shell's executable PATH
+-- https://sox.sourceforge.net/sox.html
+function defaultPlayer(pitch, octave, duration)
+   local command = "play -qn synth " .. duration .. " pluck " .. string.upper(pitch) .. octave
+   if debugFlag then print(command) end
+   os.execute(command)
+end
+
 local function play(rt, player)
+   player = player or defaultPlayer
    for _, note in ipairs(rt.notes) do
       playNote(note, rt.defaults, player)
    end
