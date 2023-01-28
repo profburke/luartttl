@@ -1,5 +1,8 @@
 #!/usr/bin/env lua
 
+-- "Plays" Jingle Bells by flashing a blink(1). Requires Luablink available from
+-- https://github.com/profburke/luablink
+
 local rtttl = require 'rtttl'
 local blink = require 'blink'
 

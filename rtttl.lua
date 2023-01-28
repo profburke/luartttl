@@ -150,6 +150,7 @@ package = {
    print = printRingtone,
    play = play,
    playNote = playNote,
+   _VERSION = "0.6.1"
 }
 
 return package
