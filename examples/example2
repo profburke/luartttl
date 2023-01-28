@@ -30,6 +30,7 @@ function player(pitch, octave, duration)
    b:set(color[1], color[2], color[3])
    blink.sleep(math.floor(500*duration))
    b:off()
+   blink.sleep(200)
 end
 
 rtttl.play(rt, player)
