@@ -116,8 +116,9 @@ local function printRingtone(rt)
 end
 
 local function playNote(n, d, player)
-   local spb = 60/d.beat
-   local beats = d.duration / n.duration
+   -- beats are usually assigned to quarter notes
+   local spb = 4*60/d.beat
+   local beats = 1/n.duration
    local seconds = beats * spb
    if n.dotted then
       seconds = seconds + 1/2*seconds
