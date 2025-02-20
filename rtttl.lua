@@ -1,5 +1,5 @@
 --[[
-   Parser and Player for RTTTL.
+   Parser for RTTTL.
 
    Copyright (c) 2023 Bluedino Software (https://bluedino.net)
 
@@ -38,6 +38,38 @@
    Various RTTTL files available at https://picaxe.com/rtttl-ringtones-for-tune-command/
 --]]
 
+N = {}
+function N:new(o)
+   o = o or {}
+   setmetatable(o, self)
+   self.__index = self
+   return o
+end
+
+function N:__tostring()
+   local s = (self.duration or '') .. self.pitch .. (self.octave or '')
+   if self.dotted then s = s .. '.' end
+   return s
+end
+
+RT = {}
+function RT:new(o)
+   o = o or {}
+   setmetatable(o, self)
+   self.__index = self
+   return o
+end
+
+function RT:__tostring()
+   local h = string.format("Title: %s\nDefaults: beat = %d, duration = %d, octave = %d\n",
+      self.title, self.defaults.beat, self.defaults.duration, self.defaults.octave)
+   local s = ""
+   for i,n in ipairs(self.notes) do
+      s = s .. (i > 1 and ", " or "") .. tostring(n)
+   end
+   return h .. "Notes: " .. s
+end
+
 function string.split(m, sep)
    sep = sep or " "
    local t = {}
@@ -67,14 +99,14 @@ local function parseDefaults(s)
 end
 
 local function parseNote(note, defaults)
-   local n = {}
    local b, p, o, d = note:match("(%d*)(%a#?)(%d?)(%.?)")
    
-   n.duration = tonumber(b) or defaults.duration
-   n.pitch = p
-   n.octave = tonumber(o) or defaults.octave
-   n.dotted = (d == '.')
-   
+   local n = N:new{
+      duration = tonumber(b) or defaults.duration,
+      pitch = p,
+      octave = tonumber(o) or defaults.octave,
+      dotted = (d == '.')
+   }
    return n
 end
 
@@ -93,32 +125,19 @@ local function parse(m)
       return nil, "RTTTL descriptor must contain three sections."
    end
 
-   local r = {}
-   r.title = sections[1]
-   r.defaults = parseDefaults(sections[2])
-   r.notes = parseNotes(sections[3], r.defaults)
+   local defaults = parseDefaults(sections[2])
+   local r = RT:new{
+      title = sections[1],
+      defaults = defaults,
+      notes = parseNotes(sections[3], defaults),
+   }
    
    return r
-end
-
-local function printNote(n)
-   local s = (n.duration or '') .. n.pitch .. (n.octave or '')
-   if n.dotted then s = s .. '.' end
-   print(s)
-end
-
-local function printRingtone(rt)
-   print("Title: " .. rt.title)
-   print("Defaults: beat = " .. rt.defaults.beat .. " duration = " .. rt.defaults.duration .. " octave = " .. rt.defaults.octave)
-   for _, n in ipairs(rt.notes) do
-      printNote(n)
-   end
 end
 
 
 package = {
    parse = parse,
-   print = printRingtone,
    _VERSION = "0.6.1"
 }
 
