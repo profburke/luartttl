@@ -116,8 +116,6 @@ local function printRingtone(rt)
 end
 
 local function playNote(n, d, player)
-   if n.pitch == "p" then return end -- TODO: deal with rests
-   
    local spb = 60/d.beat
    local beats = d.duration / n.duration
    local seconds = beats * spb
@@ -133,7 +131,8 @@ end
 -- depends on play command from SoX being installed in a location on the shell's executable PATH
 -- https://sox.sourceforge.net/sox.html
 function defaultPlayer(pitch, octave, duration)
-   local command = "play -qn synth " .. duration .. " pluck " .. string.upper(pitch) .. octave
+   local note = string.upper(pitch) .. octave
+   local command = "play -qnt alsa synth " .. duration .. " pluck " .. (pitch ~= "p" and note or "C vol 0")
    if debugFlag then print(command) end
    os.execute(command)
 end
