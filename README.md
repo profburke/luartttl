@@ -58,7 +58,11 @@ In addition, I would really enjoy hearing if anybody uses this library. Send me 
 - Support luarocks
 
 
+### Acknowledgments
 
+Thanks to the following:
+
+- Github user `slugh23` for a PR with improved code modularization and improvements to rests and timing
 
 ## License
 
