@@ -16,7 +16,7 @@ local function playNote(n, d, player)
  -- https://sox.sourceforge.net/sox.html
  function defaultPlayer(pitch, octave, duration)
     local note = string.upper(pitch) .. octave
-    local command = "play -qnt alsa synth " .. duration .. " pluck " .. (pitch ~= "p" and note or "C vol 0")
+    local command = "play -qn synth " .. duration .. " pluck " .. (pitch ~= "p" and note or "C vol 0")
     if debugFlag then print(command) end
     os.execute(command)
  end
