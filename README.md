@@ -14,12 +14,13 @@ The following example, reads in a file (whose name is specified on the command l
 
 ~~~lua
 rtttl = require 'rtttl'
+player = require 'player'
 
 infile = io.open(arg[1], 'r')
 m = infile:read('a')
 rt = rtttl.parse(m)
 
-rtttl.play(rt)
+player.play(rSt)
 ~~~
 
 To use a custom note-player, you supply a function with the following signature: 
@@ -40,7 +41,7 @@ Two other functions are currently exposed, although they will likely be changed 
 
 This library was developed with Lua 5.4.2 but ought to work with any 5.x version. The default player assumes that SoX is installed. See [SoX's Home Page](https://sox.sourceforge.net/) for details on acquiring and ibstalling it.
 
-To install the library, put the file, `rtttl.lua`, in any directory in Lua's path (e.g. `/usr/local/lib/lua/5.4`). The file, `play.lua` can be placed in any directory in the shell's PATH (e.g. `/usr/local/bin`). Change it's file permissions to make it executable.
+To install the library, put the files, `rtttl.lua` and `player.lua`, in any directory in Lua's path (e.g. `/usr/local/lib/lua/5.4`). The file, `play.lua` can be placed in any directory in the shell's PATH (e.g. `/usr/local/bin`). Change it's file permissions to make it executable.
 
 ## How to Help
 

@@ -4,11 +4,12 @@
 -- https://github.com/profburke/luablink
 
 local rtttl = require 'rtttl'
+local play = require('player').play
 local blink = require 'blink'
 
 m = "JingleBell:d=8,o=5,b=112:32p,a,a,4a,a,a,4a,a,c6,f.,16g,2a,a#,a#,a#.,16a#,a#,a,a.,16a,a,g,g,a,4g,4c6"
 rt = rtttl.parse(m)
-rtttl.print(rt)
+print(rt)
 
 local b = blink.open()
 
@@ -36,4 +37,4 @@ function player(pitch, octave, duration)
    blink.sleep(200)
 end
 
-rtttl.play(rt, player)
+play(rt, player)
