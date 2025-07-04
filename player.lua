@@ -28,4 +28,7 @@ local function playNote(n, d, player)
     end
  end
  
- return { play = play }
+ return {
+    play = play,
+    _VERSION = "0.7.1"
+ }

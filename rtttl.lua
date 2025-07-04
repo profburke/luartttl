@@ -138,7 +138,7 @@ end
 
 package = {
    parse = parse,
-   _VERSION = "0.6.1"
+   _VERSION = "0.7.1"
 }
 
 return package

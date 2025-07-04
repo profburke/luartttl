@@ -62,7 +62,7 @@ In addition, I would really enjoy hearing if anybody uses this library. Send me 
 
 ## License
 
-Copyright (c) 2023 Bluedino Software
+Copyright (c) 2023-2025 Bluedino Software
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
