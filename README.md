@@ -20,7 +20,7 @@ infile = io.open(arg[1], 'r')
 m = infile:read('a')
 rt = rtttl.parse(m)
 
-player.play(rSt)
+player.play(rt)
 ~~~
 
 To use a custom note-player, you supply a function with the following signature: 
