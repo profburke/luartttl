@@ -51,7 +51,7 @@ In addition, I would really enjoy hearing if anybody uses this library. Send me 
 
 ### TODO
 
-- Refactor into "classes" for ring tone, note, and ???
+- Add a test suite
 - Add additional (_hopefully interesting_) examples
 - Devise a configuration mechanism to specify note players and/or automatic detection and configuration
 - Support flats, double-sharps, repeats, and ???
